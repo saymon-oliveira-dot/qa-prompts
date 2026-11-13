@@ -68,6 +68,7 @@ Valem para toda skill, salvo se o próprio `SKILL.md` abrir uma exceção explí
 
 ## Ao alterar este repositório
 
+- Ao criar uma skill nova, atualize o `README.md` na mesma alteração: inclua a pasta na tabela de skills, com uma frase do que ela faz. Se a instalação mudar, atualize essa seção também.
 - Mudança de comportamento de uma skill fica no `SKILL.md` dessa skill, não espalhada em vários arquivos.
 - Não crie skill em `~/.cursor/skills-cursor/`. Esse diretório é do Cursor.
 - Não commite segredo, token ou arquivo `.env`.
