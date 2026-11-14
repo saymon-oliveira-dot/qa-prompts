@@ -14,17 +14,17 @@ Com entrada TEXTO sem site conhecido, deixe a chave sem link.
 
 ## Estrutura padrão do cenário
 
-Todo cenário começa com uma checkbox desmarcada antes do título, para o QA marcar quando executar. O ID e o título do cenário ficam sempre em negrito, em qualquer formato de saída (Jira ou chat); a prioridade fica fora do negrito. Depois de cada cenário, deixe uma linha em branco antes do próximo. Para cada cenário:
+Todo cenário começa com uma checkbox desmarcada antes do título, para o QA marcar quando executar. O ID e o título do cenário ficam sempre em negrito, em qualquer formato de saída (Jira ou chat). A prioridade `P0`/`P1`/`P2` das heurísticas não aparece no card: ela só orienta a geração. Depois de cada cenário, deixe uma linha em branco antes do próximo. Para cada cenário:
 
 ```text
-- [ ] **CT-NNN — <título>** [P0/P1/P2]
+- [ ] **CT-NNN — <título>**
   - Rastreio: <ISSUE-KEY com link> / <critério de aceite ou trecho>
   - Pré-condições: ...
   - Resultado esperado: ...
 
 ```
 
-No Jira em HTML, a checkbox é um item de task list: `<ul data-type="task-list"><li data-type="task-item"><strong>CT-NNN — <título></strong> [P0]</li></ul>`, seguido de uma lista comum (`<ul>`) com Rastreio, Pré-condições e Resultado esperado, e de um parágrafo vazio (`<p></p>`) como quebra de linha antes do próximo cenário. Não marque nenhuma checkbox.
+No Jira em HTML, a checkbox é um item de task list: `<ul data-type="task-list"><li data-type="task-item"><strong>CT-NNN — <título></strong></li></ul>`, seguido de uma lista comum (`<ul>`) com Rastreio, Pré-condições e Resultado esperado, e de um parágrafo vazio (`<p></p>`) como quebra de linha antes do próximo cenário. Não marque nenhuma checkbox.
 
 Numere os cenários `CT-001`, `CT-002`, … Títulos curtos e com intenção clara.
 
@@ -62,7 +62,10 @@ Assim que o usuário responder com as informações pedidas, não peça para rei
 Quando o destino for a descrição da subtarefa no Jira, o primeiro bloco é o aviso de validação humana definido em `SKILL.md`. Ele vem antes dos itens abaixo.
 
 1. **Resumo do card** (curto, até 300 caracteres), seguido de uma linha horizontal (`<hr>` em HTML, `----` em wiki, `---` em markdown). Não liste fontes nem subtarefas usadas no resumo.
-2. **Cenários de teste** (estrutura padrão do cenário neste arquivo, com checkbox e linha em branco entre cenários)
+2. **Cenários**, em três grupos e nesta ordem. Cada grupo é um título seguido dos cenários daquele grupo (estrutura padrão deste arquivo, com checkbox e linha em branco entre cenários). A numeração `CT-001`, `CT-002`, … continua de um grupo para o outro. Omita o título do grupo que não tiver cenário.
+   - **Cenários felizes** — caminho feliz, cenário positivo de regra de negócio e estado de sucesso.
+   - **Cenários de exceção e autorização** — cenário negativo de regra, teste negativo, erro explícito e bloqueio por permissão, autorização ou origem.
+   - **Cenários de limite e transição** — valores de limite e transição de estado (entrada, progressão, conclusão e bloqueio por limite, timeout, quota ou retentativa).
 3. **Cenários Gherkin** (quando o usuário pedir)
 4. **Lacunas / perguntas**, precedidas de uma linha horizontal antes do título — AC faltando, regras pouco claras, afirmações não testáveis, necessidades de dados/ambiente. Sempre em forma de pergunta analítica, no formato de lista deste arquivo.
 
@@ -74,13 +77,20 @@ Use o exemplo abaixo como base:
 Resumo do que se trata o card em até 300 caracteres
 ---
 
-Cenários de teste
-- [ ] **CT-001 — <título>** [P0]
+Cenários felizes
+- [ ] **CT-001 — <título>**
   - Rastreio: [UP-431](<link>) / ...
   - Pré-condições: ...
   - Resultado esperado: ...
 
-- [ ] **CT-002 — <título>** [P1]
+Cenários de exceção e autorização
+- [ ] **CT-002 — <título>**
+  - Rastreio: ...
+  - Pré-condições: ...
+  - Resultado esperado: ...
+
+Cenários de limite e transição
+- [ ] **CT-003 — <título>**
   - Rastreio: ...
   - Pré-condições: ...
   - Resultado esperado: ...

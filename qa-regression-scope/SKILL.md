@@ -8,7 +8,7 @@ description: >-
   cenários regressivos, suíte de regressão, escopo de regressão ou análise de
   histórias concluídas (Done) de uma squad ou produto.
 disable-model-invocation: false
-version: "1"
+version: "1.0"
 ---
 
 ## QA - Escopo de regressão por squad / produto

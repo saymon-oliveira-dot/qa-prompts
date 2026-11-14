@@ -4,7 +4,7 @@ description: |-
   Gera cenários de testes funcionais orientado a riscos a partir de um card do Jira (Jira/Atlassian (chave como PROJ-123), com checklist de suficiência, rastreamento estruturado de lacunas, heurísticas determinísticas de QA. Gera um roteiro de testes na conversa. 
   Aceita como entrada a cjave da issue do Jira ou texto da história/PRD/critérios de aceite colados diretamente. Com uma estória do Jira, lê também as subtarefas dela como base dos cenários e, se houver link do Figma, o comportamento funcional do design.
 disable-model-invocation: false
-version: "1"
+version: "2.0"
 ---
 
 ## QA - Criação de Casos de testes

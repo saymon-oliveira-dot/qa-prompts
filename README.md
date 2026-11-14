@@ -6,12 +6,16 @@ Uma skill não é código da aplicação. É o roteiro que o Cursor segue quando
 
 ## Skills
 
-| Pasta | O que faz |
-|---|---|
-| `qa-create-test-case` | Gera cenários de teste funcional a partir de um card do Jira (`PROJ-123`) ou de um texto colado (história, PRD ou critérios de aceite). Se a entrada for uma história e o conteúdo for suficiente, grava o resultado na subtarefa `[QA] Testabilidade e cenários`. |
-| `qa-regression-scope` | Lê as histórias em Done dos boards upstream e downstream do Jira, cruza o que foi refinado com o que foi entregue e gera cenários regressivos por squad ou produto, no chat. Não grava nada no Jira. |
+| Pasta | Versão | O que faz |
+|---|---|---|
+| `qa-create-test-case` | 2.0 | Gera cenários de teste funcional a partir de um card do Jira (`PROJ-123`) ou de um texto colado (história, PRD ou critérios de aceite). Se a entrada for uma história e o conteúdo for suficiente, grava o resultado na subtarefa `[QA] Testabilidade e cenários`. |
+| `qa-regression-scope` | 1.0 | Lê as histórias em Done dos boards upstream e downstream do Jira, cruza o que foi refinado com o que foi entregue e gera cenários regressivos por squad ou produto, no chat. Não grava nada no Jira. |
 
 O fluxo da `qa-create-test-case` está desenhado em [`qa-create-test-case/fluxo.html`](qa-create-test-case/fluxo.html). Abra o arquivo no navegador.
+
+## Marketplace do time
+
+A `qa-create-test-case` também é distribuída como plugin pelo marketplace do time no Cursor (`devead-team/cursor-plugin-marketplace-4027107`, no origin.cursor.com). A cópia do marketplace só muda quando alguém dá push nela. Por isso o `AGENTS.md` manda publicar a skill lá a cada alteração.
 
 ## Instalar na máquina
 

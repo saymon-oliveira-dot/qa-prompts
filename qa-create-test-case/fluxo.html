@@ -113,7 +113,7 @@
 <body>
 
 <header>
-  <h1>qa-create-test-case</h1>
+  <h1>qa-create-test-case <span style="font-weight:400;font-size:16px;color:#b3bac5">2.0</span></h1>
   <p>Gera cenários de teste funcionais a partir de uma estória do Jira (ou de um texto colado), lendo também as subtarefas, os comentários e o Figma, e grava o resultado na subtarefa <b>[QA] Testabilidade e cenários</b>.</p>
 </header>
 
@@ -226,15 +226,20 @@
   <b>Resumo</b>
   <div>Do que se trata o card, em até 300 caracteres.</div>
   <hr>
-  <b>Cenários de teste</b>
-  <div class="ct"><span class="title"><b>CT-001 — Título curto do cenário</b> [P0]</span>
+  <b>Cenários felizes</b>
+  <div class="ct"><span class="title"><b>CT-001 — Título curto do cenário</b></span>
     <ul>
       <li><b>Rastreio:</b> <a href="#">UP-603</a> / trecho do critério · <a href="#">Figma / nome do frame</a></li>
       <li><b>Pré-condições:</b> …</li>
       <li><b>Resultado esperado:</b> …</li>
     </ul>
   </div>
-  <div class="ct"><span class="title"><b>CT-002 — …</b> [P1]</span>
+  <b>Cenários de exceção e autorização</b>
+  <div class="ct"><span class="title"><b>CT-002 — …</b></span>
+    <ul><li>…</li></ul>
+  </div>
+  <b>Cenários de limite e transição</b>
+  <div class="ct"><span class="title"><b>CT-003 — …</b></span>
     <ul><li>…</li></ul>
   </div>
   <div style="color:var(--muted)">Cenários Gherkin (só se o usuário pediu)</div>
@@ -251,7 +256,8 @@
     <h3>Regras de formato</h3>
     <ul>
       <li>Cada cenário com checkbox desmarcada e linha em branco depois.</li>
-      <li>ID e título em negrito; prioridade fora do negrito.</li>
+      <li>ID e título em negrito. A prioridade P0/P1/P2 não entra no card.</li>
+      <li>Três grupos, nesta ordem: felizes, exceção e autorização, limite e transição. Grupo vazio some.</li>
       <li>Numeração <b>CT-001</b>, <b>CT-002</b>… e lacunas <b>L1</b>, <b>L2</b>…</li>
       <li>Severidade em português: <b>bloqueante</b>, <b>média</b>, <b>baixa</b>.</li>
       <li>Toda chave de issue citada vira link.</li>
@@ -302,7 +308,7 @@
   </div>
 </div>
 
-<footer>Reflete o <span class="mono">SKILL.md</span> e os arquivos de <span class="mono">references/</span> em 13/11/2026.</footer>
+<footer>Reflete o <span class="mono">SKILL.md</span> e os arquivos de <span class="mono">references/</span> em 14/11/2026.</footer>
 
 </main>
 </body>

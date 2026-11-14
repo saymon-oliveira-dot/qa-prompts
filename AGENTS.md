@@ -41,6 +41,7 @@ description: >-
   O que a skill faz e quando o agente deve usá-la.
   Inclua os termos que o usuário realmente diz.
 disable-model-invocation: false
+version: "1.0"
 ---
 ```
 
@@ -53,6 +54,17 @@ Corpo esperado:
 - regras absolutas (o que não inventar)
 - formato de saída, com um exemplo curto
 - lacunas: o que falta e como o usuário completa
+
+## Versão
+
+Toda skill tem `version` no frontmatter do `SKILL.md`, no formato `MAJOR.MINOR` (exemplo: `1.4`). Sem patch.
+
+Toda alteração em `SKILL.md` ou em `references/` sobe a versão na mesma tarefa, um incremento por tarefa. Ajuste só de diagrama, README ou typo que não muda instrução não sobe versão.
+
+- **Major** (`1.4` → `2.0`, o minor volta a zero): o mesmo pedido passa a produzir outro resultado, ou quem já usa a skill precisa mudar o jeito de chamar. Vale para formato do card ou do chat, ordem do fluxo, pergunta nova obrigatória, regra absoluta nova ou removida, e para a skill deixar de fazer algo que fazia.
+- **Minor** (`1.4` → `1.5`): o comportamento muda e o contrato continua o mesmo. Vale para exemplo, redação, lacuna, heurística ou passo que não muda a estrutura da saída nem o que o usuário responde.
+
+O `README.md` repete a versão na tabela de skills, igual à do frontmatter. A `qa-create-test-case` também mostra a versão no título de `fluxo.html`.
 
 ## Invariantes de QA
 
@@ -68,9 +80,14 @@ Valem para toda skill, salvo se o próprio `SKILL.md` abrir uma exceção explí
 
 ## Ao alterar este repositório
 
-- Ao criar uma skill nova, atualize o `README.md` na mesma alteração: inclua a pasta na tabela de skills, com uma frase do que ela faz. Se a instalação mudar, atualize essa seção também.
+- Ao criar uma skill nova, atualize o `README.md` na mesma alteração: inclua a pasta na tabela de skills, com a versão e uma frase do que ela faz. Se a instalação mudar, atualize essa seção também.
+- Ao alterar uma skill, suba a `version` no frontmatter (major ou minor, conforme a seção Versão) e a mesma versão na tabela do `README.md`.
 - Mudança de comportamento de uma skill fica no `SKILL.md` dessa skill, não espalhada em vários arquivos.
 - A `qa-create-test-case` tem um diagrama do fluxo em `qa-create-test-case/fluxo.html`. Toda alteração no `SKILL.md` ou em `references/` dessa skill atualiza o `fluxo.html` na mesma alteração, incluindo a data do rodapé.
+- Toda alteração numa skill termina com a publicação dela, na mesma tarefa:
+  1. Copie a pasta inteira da skill para `%USERPROFILE%\.cursor\skills\<nome-da-skill>\`, apagando a cópia anterior antes, para o usuário ter a versão nova em qualquer projeto.
+  2. Se a skill existir no marketplace do time (`https://origin.cursor.com/devead-team/cursor-plugin-marketplace-4027107`, em `plugins/<nome-da-skill>/skills/<nome-da-skill>/`), substitua essa pasta pela versão do repositório, faça commit e push na `main`. O push exige o CLI `origin` autenticado, que não roda no Windows nativo. Se não for possível, avise o usuário e diga que a publicação no marketplace ficou pendente.
+  3. Avise o usuário para abrir um chat novo, porque o chat atual continua com a versão anterior.
 - Não crie skill em `~/.cursor/skills-cursor/`. Esse diretório é do Cursor.
 - Não commite segredo, token ou arquivo `.env`.
-- Faça commit e pull request só quando o usuário pedir.
+- Neste repositório, faça commit e pull request só quando o usuário pedir. O push no marketplace do time é a exceção descrita acima.
