@@ -50,9 +50,9 @@ Não gere arquivos. Com entrada TICKET, os cenários vão só para o card no Jir
       2. **Subtarefas da estória.** Depois de buscar a estória, busque as subtarefas dela (campo `subtasks` da issue ou JQL `parent = <ISSUE-KEY>`). De cada subtarefa, leia summary, description, critérios de aceite e comentários quando disponíveis.
          1. Ignore a subtarefa "[QA] Testabilidade e cenários". Ela é a saída desta skill, não fonte.
          2. Estória e subtarefas formam uma única base: aplique o checklist de suficiência e as heurísticas sobre o conteúdo das duas.
-         3. Cenário que vem de uma subtarefa rastreia a chave dela (ex.: `PROJ-124 / <trecho>`), não só a da estória.
+         3. Cenário que vem de uma subtarefa rastreia a chave dela, com link para a issue (ex.: `PROJ-124 / <trecho>`), não só a da estória.
          4. Se uma subtarefa contradizer a estória, não escolha um lado. Registre a contradição como lacuna citando as duas chaves.
-         5. Subtarefa sem conteúdo funcional (só título técnico, sem descrição) não gera cenário. Cite a chave como lacuna `low` (subtarefa sem conteúdo funcional).
+         5. Subtarefa sem conteúdo funcional (só título técnico, sem descrição) não gera cenário. Cite a chave como lacuna `baixa` (subtarefa sem conteúdo funcional).
          6. Se a busca das subtarefas falhar, siga só com a estória e informe no chat que as subtarefas ficaram indisponíveis.
       3. Gherkin:
          1. Se o usuário informar que quer Gherkin, gere os cenários conforme ordem descrita em [references/saida.md](references/saida.md).
@@ -133,7 +133,7 @@ Analise **apenas** critérios funcionais explícitos.
 Abra só o arquivo do passo em que você está.
 
 - [references/suficiencia.md](references/suficiencia.md) — checklist e veredito SUFICIENTE / INSUFICIENTE
-- [references/lacunas.md](references/lacunas.md) — como registrar lacuna `blocker`, `medium` e `low`
+- [references/lacunas.md](references/lacunas.md) — como registrar lacuna `bloqueante`, `média` e `baixa`
 - [references/heuristicas.md](references/heuristicas.md) — ordem de geração quando SUFICIENTE
 - [references/tabela-decisao.md](references/tabela-decisao.md) — só com 2+ condições independentes combinadas
 - [references/saida.md](references/saida.md) — estrutura do cenário e ordem da saída
