@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>qa-create-test-case — como a skill funciona</title>
+<style>
+  :root {
+    --bg: #f6f7f9;
+    --card: #ffffff;
+    --ink: #172b4d;
+    --muted: #5e6c84;
+    --line: #c1c7d0;
+    --step: #deebff;
+    --step-b: #4c9aff;
+    --ask: #fff0b3;
+    --ask-b: #ffab00;
+    --stop: #ffebe6;
+    --stop-b: #de350b;
+    --ok: #e3fcef;
+    --ok-b: #36b37e;
+    --src: #eae6ff;
+    --src-b: #6554c0;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.45;
+  }
+  header {
+    background: var(--ink);
+    color: #fff;
+    padding: 28px 40px;
+  }
+  header h1 { margin: 0 0 6px; font-size: 26px; }
+  header p { margin: 0; color: #b3bac5; max-width: 900px; }
+  main { max-width: 1180px; margin: 0 auto; padding: 32px 24px 60px; }
+  h2 { font-size: 20px; margin: 40px 0 14px; }
+  .legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 22px; font-size: 13px; color: var(--muted); }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; }
+  .sw { width: 14px; height: 14px; border-radius: 3px; border: 2px solid; display: inline-block; }
+
+  .flow { display: flex; flex-direction: column; align-items: center; }
+  .node {
+    width: min(560px, 100%);
+    border: 2px solid var(--step-b);
+    background: var(--step);
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  .node b.t { display: block; font-size: 15px; margin-bottom: 2px; }
+  .node.ask { background: var(--ask); border-color: var(--ask-b); border-style: dashed; }
+  .node.stop { background: var(--stop); border-color: var(--stop-b); }
+  .node.ok { background: var(--ok); border-color: var(--ok-b); }
+  .node.src { background: var(--src); border-color: var(--src-b); }
+  .node.start { background: var(--ink); color: #fff; border-color: var(--ink); text-align: center; border-radius: 30px; }
+  .node small { color: var(--muted); display: block; margin-top: 4px; }
+  .node.start small { color: #b3bac5; }
+  .num {
+    display: inline-block; min-width: 22px; height: 22px; line-height: 22px;
+    text-align: center; border-radius: 11px; background: var(--ink); color: #fff;
+    font-size: 12px; margin-right: 6px;
+  }
+  .arrow { width: 2px; height: 26px; background: var(--line); position: relative; }
+  .arrow::after {
+    content: ""; position: absolute; bottom: -2px; left: -5px;
+    border-left: 6px solid transparent; border-right: 6px solid transparent;
+    border-top: 8px solid var(--line);
+  }
+  .label { font-size: 12px; font-weight: 600; color: var(--muted); margin: 2px 0; }
+
+  .branch {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 18px;
+    width: min(900px, 100%); margin-top: 4px;
+  }
+  .branch.three { grid-template-columns: 1fr 1fr 1fr; width: min(1100px, 100%); }
+  .col { display: flex; flex-direction: column; align-items: center; }
+  .col .node { width: 100%; }
+  .tag {
+    font-size: 12px; font-weight: 700; padding: 2px 10px; border-radius: 10px;
+    background: #fff; border: 1px solid var(--line); margin-bottom: 6px;
+  }
+
+  .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+  .panel {
+    background: var(--card); border: 1px solid #dfe1e6; border-radius: 10px;
+    padding: 18px 20px; font-size: 14px;
+  }
+  .panel h3 { margin: 0 0 10px; font-size: 16px; }
+  .panel ol, .panel ul { margin: 0; padding-left: 20px; }
+  .panel li { margin: 4px 0; }
+
+  .cardmock { background: var(--card); border: 1px solid #dfe1e6; border-radius: 10px; padding: 18px 22px; font-size: 14px; }
+  .warn { background: #fffae6; border-left: 4px solid #ff991f; padding: 10px 14px; border-radius: 4px; margin-bottom: 14px; }
+  .warn b { display: block; }
+  .cardmock hr { border: 0; border-top: 1px solid #dfe1e6; margin: 14px 0; }
+  .ct { margin: 10px 0 16px; }
+  .ct .title::before { content: "☐ "; }
+  .ct ul { margin: 4px 0 0; padding-left: 26px; color: var(--muted); }
+  .mono { font-family: Consolas, monospace; font-size: 13px; }
+  a { color: #0052cc; }
+  footer { color: var(--muted); font-size: 12px; text-align: center; margin-top: 40px; }
+
+  @media (max-width: 760px) {
+    .branch, .branch.three, .grid2 { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>qa-create-test-case</h1>
+  <p>Gera cenários de teste funcionais a partir de uma estória do Jira (ou de um texto colado), lendo também as subtarefas, os comentários e o Figma, e grava o resultado na subtarefa <b>[QA] Testabilidade e cenários</b>.</p>
+</header>
+
+<main>
+
+<div class="legend">
+  <span><i class="sw" style="background:var(--step);border-color:var(--step-b)"></i> passo da skill</span>
+  <span><i class="sw" style="background:var(--ask);border-color:var(--ask-b)"></i> pergunta ao usuário</span>
+  <span><i class="sw" style="background:var(--src);border-color:var(--src-b)"></i> leitura de fontes</span>
+  <span><i class="sw" style="background:var(--ok);border-color:var(--ok-b)"></i> resultado</span>
+  <span><i class="sw" style="background:var(--stop);border-color:var(--stop-b)"></i> para o fluxo</span>
+</div>
+
+<h2>Fluxo principal</h2>
+
+<div class="flow">
+
+  <div class="node start"><b class="t">/qa-create-test-case</b><small>com a chave da estória (ex.: UP-428) ou um texto colado</small></div>
+  <div class="arrow"></div>
+
+  <div class="node"><b class="t">Verificar o MCP do Atlassian</b>
+    Confirma a sessão com <span class="mono">atlassianUserInfo</span>.</div>
+  <div class="arrow"></div>
+  <div class="branch">
+    <div class="col"><span class="tag">conectado</span><div class="node ok">Informa o usuário autenticado e segue.</div></div>
+    <div class="col"><span class="tag">sem login / erro</span><div class="node stop">Abre o login (<span class="mono">mcp_auth</span>) uma vez. Se falhar de novo, orienta a ligar em Settings → MCP e <b>para</b>.</div></div>
+  </div>
+  <div class="arrow"></div>
+
+  <div class="node"><b class="t">Verificar o MCP do Figma</b>
+    Logo depois do Atlassian.</div>
+  <div class="arrow"></div>
+  <div class="branch three">
+    <div class="col"><span class="tag">conectado</span><div class="node ok">Avisa que o Figma está conectado.</div></div>
+    <div class="col"><span class="tag">sem login</span><div class="node">Abre o login uma vez e pede para o usuário confirmar.</div></div>
+    <div class="col"><span class="tag">indisponível</span><div class="node">Avisa e <b>segue</b>. Links do Figma vão virar lacuna.</div></div>
+  </div>
+  <div class="arrow"></div>
+
+  <div class="node ask"><b class="t">Coletar a entrada</b>
+    Espera o usuário informar a chave do Jira ou colar o texto.</div>
+  <div class="arrow"></div>
+  <div class="branch">
+    <div class="col"><span class="tag">TEXTO colado</span>
+      <div class="node">Analisa o texto com o mesmo checklist e as mesmas heurísticas.</div>
+      <div class="arrow"></div>
+      <div class="node ok">Saída completa <b>no chat</b>. Nada é gravado no Jira.</div>
+    </div>
+    <div class="col"><span class="tag">TICKET do Jira</span>
+      <div class="node">Segue o fluxo abaixo.</div>
+    </div>
+  </div>
+  <div class="arrow"></div>
+
+  <div class="node"><b class="t">Já existem cenários?</b>
+    Procura a subtarefa <b>[QA] Testabilidade e cenários</b> com descrição preenchida.</div>
+  <div class="arrow"></div>
+  <div class="branch">
+    <div class="col"><span class="tag">não existe ou está vazia</span><div class="node ok">Segue sem perguntar.</div></div>
+    <div class="col"><span class="tag">existe com conteúdo</span>
+      <div class="node ask">Mostra o link e a data de geração e pergunta: <i>Deseja regerar os cenários?</i></div>
+      <div class="arrow"></div>
+      <div class="branch">
+        <div class="col"><span class="tag">Não</span><div class="node stop">Não altera nada, devolve o link e encerra.</div></div>
+        <div class="col"><span class="tag">Sim</span><div class="node ok">Segue. A descrição inteira será substituída.</div></div>
+      </div>
+    </div>
+  </div>
+  <div class="arrow"></div>
+
+  <div class="node ask"><b class="t">Gherkin?</b>
+    <i>Deseja gerar cenários Gherkin também?</i> (Sim/Não)</div>
+  <div class="arrow"></div>
+
+  <div class="node src"><b class="t">Ler as fontes</b>
+    <ul style="margin:6px 0 0;padding-left:18px">
+      <li>Estória: descrição, critérios de aceite, comentários, issues vinculadas</li>
+      <li>Subtarefas: descrição e comentários (ignora a própria <b>[QA] Testabilidade e cenários</b>)</li>
+      <li>Figma, se houver link: só comportamento funcional (estados, erros, campos obrigatórios, fluxo entre telas)</li>
+    </ul>
+    <small>Contradição entre fontes vira lacuna citando as duas. Nada é inventado.</small></div>
+  <div class="arrow"></div>
+
+  <div class="node"><b class="t">Checklist de suficiência</b>
+    Existe fluxo funcional, regra de negócio ou estado do sistema explícito?</div>
+  <div class="arrow"></div>
+  <div class="branch">
+    <div class="col"><span class="tag">INSUFICIENTE</span>
+      <div class="node stop">Lista as lacunas no chat como perguntas e orienta o que complementar. Não cria nem altera subtarefa. Em regeração, os cenários antigos ficam.</div>
+    </div>
+    <div class="col"><span class="tag">SUFICIENTE</span>
+      <div class="node">Aplica as heurísticas em ordem e monta cenários e lacunas.</div>
+    </div>
+  </div>
+  <div class="arrow"></div>
+
+  <div class="node"><b class="t">Gravar no card</b>
+    Cria a subtarefa <b>[QA] Testabilidade e cenários</b> (tipo Subtarefa) ou regrava a descrição da existente. Não mexe em status nem no board.</div>
+  <div class="arrow"></div>
+
+  <div class="node ok"><b class="t">Resposta curta no chat</b>
+    Link da estória, link da subtarefa (criada ou atualizada), quantidade de cenários, se tem Gherkin e quantidade de lacunas. Nada de cenários no chat.</div>
+
+</div>
+
+<h2>O que vai no card</h2>
+
+<div class="cardmock">
+  <div class="warn"><b>PENDENTE DE VALIDAÇÃO HUMANA</b>Data de geração: dd/mm/aaaa · gerado por IA, ainda não validado. Revise e retire este painel.</div>
+  <b>Resumo</b>
+  <div>Do que se trata o card, em até 300 caracteres.</div>
+  <hr>
+  <b>Cenários de teste</b>
+  <div class="ct"><span class="title"><b>CT-001 — Título curto do cenário</b> [P0]</span>
+    <ul>
+      <li><b>Rastreio:</b> <a href="#">UP-603</a> / trecho do critério · <a href="#">Figma / nome do frame</a></li>
+      <li><b>Pré-condições:</b> …</li>
+      <li><b>Resultado esperado:</b> …</li>
+    </ul>
+  </div>
+  <div class="ct"><span class="title"><b>CT-002 — …</b> [P1]</span>
+    <ul><li>…</li></ul>
+  </div>
+  <div style="color:var(--muted)">Cenários Gherkin (só se o usuário pediu)</div>
+  <hr>
+  <b>Lacunas / Pontos de atenção</b>
+  <ul>
+    <li><b>L1 (média, Regra de Negócio):</b> pergunta para o time, citando <a href="#">UP-431</a>.</li>
+    <li><b>L2 (baixa, Estado do Sistema):</b> …</li>
+  </ul>
+</div>
+
+<div class="grid2" style="margin-top:18px">
+  <div class="panel">
+    <h3>Regras de formato</h3>
+    <ul>
+      <li>Cada cenário com checkbox desmarcada e linha em branco depois.</li>
+      <li>ID e título em negrito; prioridade fora do negrito.</li>
+      <li>Numeração <b>CT-001</b>, <b>CT-002</b>… e lacunas <b>L1</b>, <b>L2</b>…</li>
+      <li>Severidade em português: <b>bloqueante</b>, <b>média</b>, <b>baixa</b>.</li>
+      <li>Toda chave de issue citada vira link.</li>
+      <li>Linha horizontal depois do resumo e antes das lacunas.</li>
+      <li>Sem linha de fonte, sem campos de ambiente e massa de teste.</li>
+    </ul>
+  </div>
+  <div class="panel">
+    <h3>Heurísticas, nesta ordem</h3>
+    <ol>
+      <li>Caminho feliz mínimo (P0)</li>
+      <li>Regra de negócio explícita: positivo e negativo</li>
+      <li>Tabela de decisão, só com 2+ condições combinadas</li>
+      <li>Estados explícitos do sistema</li>
+      <li>Valores de limite, só se houver número ou intervalo</li>
+      <li>Transição de estado</li>
+      <li>Teste negativo, só se o texto sustentar</li>
+      <li>Análise de erro, só com falha explícita</li>
+      <li>Priorização P0 / P1 / P2</li>
+      <li>Anti-duplicação</li>
+      <li>Rastreabilidade</li>
+    </ol>
+  </div>
+</div>
+
+<div class="grid2" style="margin-top:18px">
+  <div class="panel">
+    <h3>Nunca faz</h3>
+    <ul>
+      <li>Inventar regra, passo, resultado ou campo do ticket.</li>
+      <li>Validar UX, layout, cores, copy ou responsividade (nem no Figma).</li>
+      <li>Escrever script de automação.</li>
+      <li>Mudar status ou mexer no board.</li>
+      <li>Repetir os cenários no chat quando a entrada é um ticket.</li>
+    </ul>
+  </div>
+  <div class="panel">
+    <h3>Arquivos da skill</h3>
+    <ul>
+      <li><span class="mono">SKILL.md</span> — fluxo e regras</li>
+      <li><span class="mono">references/suficiencia.md</span> — checklist</li>
+      <li><span class="mono">references/heuristicas.md</span> — ordem de geração</li>
+      <li><span class="mono">references/tabela-decisao.md</span> — condições combinadas</li>
+      <li><span class="mono">references/lacunas.md</span> — formato das lacunas</li>
+      <li><span class="mono">references/saida.md</span> — formato do card e links</li>
+      <li><span class="mono">references/figma.md</span> — leitura do Figma</li>
+    </ul>
+  </div>
+</div>
+
+<footer>Reflete o <span class="mono">SKILL.md</span> e os arquivos de <span class="mono">references/</span> em 13/11/2026.</footer>
+
+</main>
+</body>
+</html>

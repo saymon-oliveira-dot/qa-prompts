@@ -70,6 +70,7 @@ Valem para toda skill, salvo se o próprio `SKILL.md` abrir uma exceção explí
 
 - Ao criar uma skill nova, atualize o `README.md` na mesma alteração: inclua a pasta na tabela de skills, com uma frase do que ela faz. Se a instalação mudar, atualize essa seção também.
 - Mudança de comportamento de uma skill fica no `SKILL.md` dessa skill, não espalhada em vários arquivos.
+- A `qa-create-test-case` tem um diagrama do fluxo em `qa-create-test-case/fluxo.html`. Toda alteração no `SKILL.md` ou em `references/` dessa skill atualiza o `fluxo.html` na mesma alteração, incluindo a data do rodapé.
 - Não crie skill em `~/.cursor/skills-cursor/`. Esse diretório é do Cursor.
 - Não commite segredo, token ou arquivo `.env`.
 - Faça commit e pull request só quando o usuário pedir.
