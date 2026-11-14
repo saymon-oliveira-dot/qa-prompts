@@ -2,7 +2,7 @@
 name: qa-create-test-case
 description: |-
   Gera cenários de testes funcionais orientado a riscos a partir de um card do Jira (Jira/Atlassian (chave como PROJ-123), com checklist de suficiência, rastreamento estruturado de lacunas, heurísticas determinísticas de QA. Gera um roteiro de testes na conversa. 
-  Aceita como entrada a cjave da issue do Jira ou texto da história/PRD/critérios de aceite colados diretamente. Com uma estória do Jira, lê também as subtarefas dela como base dos cenários.
+  Aceita como entrada a cjave da issue do Jira ou texto da história/PRD/critérios de aceite colados diretamente. Com uma estória do Jira, lê também as subtarefas dela como base dos cenários e, se houver link do Figma, o comportamento funcional do design.
 disable-model-invocation: false
 version: "1"
 ---
@@ -29,7 +29,11 @@ Não gere arquivos. Com entrada TICKET, os cenários vão só para o card no Jir
       4. Quando o usuário confirmar, consulte o namespace de novo e chame `atlassianUserInfo`. Tente o login no máximo uma vez. Não repita `mcp_auth` em sequência.
       5. Se ainda falhar, explique o erro devolvido em uma frase e oriente o usuário a abrir Settings → MCP no Cursor, conferir se o MCP Atlassian está ligado e clicar em autenticar (ou desconectar e conectar de novo). Pare e não peça a entrada.
    4. Se o namespace do Atlassian não aparecer ou estiver em erro que não seja de autenticação: oriente o usuário a instalar ou ligar o MCP Atlassian em Settings → MCP no Cursor, reiniciar o chat e chamar a skill de novo. Pare e não peça a entrada.
-   5. Se `atlassianUserInfo` responder: informe no chat com qual usuário está autenticado (nome devolvido pela API) e siga para o próximo passo.
+   5. Se `atlassianUserInfo` responder: informe no chat com qual usuário está autenticado (nome devolvido pela API) e siga para a verificação do Figma.
+   6. **Verificar o MCP do Figma**, logo depois do Atlassian. Consulte o namespace com `GetDynamicTools` (padrão `figma`).
+      1. Se o namespace estiver disponível: informe no chat que o Figma está conectado.
+      2. Se estiver em `needsAuth`: avise no chat, chame `mcp_auth` via `CallDynamicTool` no namespace do Figma com argumentos vazios e peça para o usuário concluir o login no navegador e responder no chat. Tente no máximo uma vez.
+      3. Se o namespace não existir, estiver em erro ou o login falhar: avise no chat que o Figma está indisponível e que links do Figma, se houver, vão virar lacuna. Oriente a ligar o MCP do Figma em Settings → MCP. Não pare: siga para o próximo passo.
 2. **Coletar a entrada (Ticket Jira ou texto): aguarde o usuário informar um dos dois parâmetros.** Não faça nada até que seja compartilhada uma destas informações.
 3. **Verificar se a estória já tem cenários gerados.** Só para entrada do tipo TICKET. Faça antes de qualquer outra pergunta.
    1. Busque as subtarefas da estória (campo `subtasks` ou JQL `parent = <ISSUE-KEY>`) e procure a subtarefa com o título "[QA] Testabilidade e cenários".
@@ -54,15 +58,16 @@ Não gere arquivos. Com entrada TICKET, os cenários vão só para o card no Jir
          4. Se uma subtarefa contradizer a estória, não escolha um lado. Registre a contradição como lacuna citando as duas chaves.
          5. Subtarefa sem conteúdo funcional (só título técnico, sem descrição) não gera cenário. Cite a chave como lacuna `baixa` (subtarefa sem conteúdo funcional).
          6. Se a busca das subtarefas falhar, siga só com a estória e informe no chat que as subtarefas ficaram indisponíveis.
-      3. Gherkin:
+      3. **Figma.** Se a estória, uma subtarefa ou um comentário tiver link do Figma, leia [references/figma.md](references/figma.md) e use o comportamento funcional do design como fonte, junto com o card. Faça isso antes de validar a suficiência.
+      4. Gherkin:
          1. Se o usuário informar que quer Gherkin, gere os cenários conforme ordem descrita em [references/saida.md](references/saida.md).
          2. Se o usuário informar que não quer Gherkin, não gere Gherkin.
-      4. Crie conforme padrões para inserção em um campo DESCRIÇÃO do JIRA. Se o namespace estiver ausente, em `needsAuth` / erro de autenticação, ou as tools falharem: oriente o usuário a habilitar e autenticar o **MCP Atlassian / Jira** no Cursor (Settings → MCP) e pare.
-      5. Não invente conteúdo do ticket nem configuração de servidor. **Somente dados buscados.**
-      6. Use os campos retornados pelo MCP (summary, description, critérios de aceite, subtarefas, issues vinculadas, comentários quando disponíveis). **Nunca invente** campos faltantes. Marque dados ausentes como indisponíveis.
-      7. Derive os cenários **somente** a partir do conteúdo buscado.
-      8. Prefira poucos cenários sólidos a especulação.
-      9. Ambiguidades → perguntas abertas em **Lacunas / perguntas**, não passos inventados.
+      5. Crie conforme padrões para inserção em um campo DESCRIÇÃO do JIRA. Se o namespace estiver ausente, em `needsAuth` / erro de autenticação, ou as tools falharem: oriente o usuário a habilitar e autenticar o **MCP Atlassian / Jira** no Cursor (Settings → MCP) e pare.
+      6. Não invente conteúdo do ticket nem configuração de servidor. **Somente dados buscados.**
+      7. Use os campos retornados pelo MCP (summary, description, critérios de aceite, subtarefas, issues vinculadas, comentários quando disponíveis). **Nunca invente** campos faltantes. Marque dados ausentes como indisponíveis.
+      8. Derive os cenários **somente** a partir do conteúdo buscado.
+      9. Prefira poucos cenários sólidos a especulação.
+      10. Ambiguidades → perguntas abertas em **Lacunas / perguntas**, não passos inventados.
    2. Se TEXTO: busque contexto com o usuário e traga o resultado.
 
 ## Definição de SAÍDA
@@ -94,6 +99,7 @@ Os cenários, o Gherkin e a lista de lacunas ficam só no card. Não repita no c
 - link da estória com a chave e o título
 - link da subtarefa "[QA] Testabilidade e cenários", dizendo se ela foi criada ou atualizada
 - quantidade de cenários gerados e se o Gherkin foi incluído
+- Figma: analisado (quantos frames), não analisado (motivo) ou omita a linha se o card não tiver link do Figma
 - quantidade de lacunas; se houver, uma frase pedindo para ver as lacunas no card
 
 Exemplo:
@@ -103,6 +109,7 @@ Cenários gravados no card.
 - Estória: [UP-644 — Segregar consumo de tokens e custo do DOTFlows por organização](<link>)
 - Subtarefa: [UP-653 — [QA] Testabilidade e cenários](<link>) (atualizada)
 - 8 cenários, sem Gherkin
+- Figma: 2 frames analisados
 - 9 lacunas registradas. Veja as lacunas no card antes de validar os cenários.
 ```
 
@@ -120,7 +127,9 @@ Durante o fluxo, as mensagens no chat se limitam às perguntas da skill (regerar
 
 Analise **apenas** critérios funcionais explícitos.
 
-🚫 NÃO considere: UX, layout, Figma, copy, design visual, responsividade
+🚫 NÃO considere: UX, layout, copy, design visual, responsividade
+
+Exceção: quando a estória tiver link do Figma, use dele só o comportamento funcional (estados, mensagens de erro, campos obrigatórios, fluxo entre telas), conforme [references/figma.md](references/figma.md). A parte visual do Figma continua fora.
 
 🚫 NÃO invente regras
 
@@ -137,3 +146,4 @@ Abra só o arquivo do passo em que você está.
 - [references/heuristicas.md](references/heuristicas.md) — ordem de geração quando SUFICIENTE
 - [references/tabela-decisao.md](references/tabela-decisao.md) — só com 2+ condições independentes combinadas
 - [references/saida.md](references/saida.md) — estrutura do cenário e ordem da saída
+- [references/figma.md](references/figma.md) — só quando houver link do Figma na estória, subtarefas ou comentários

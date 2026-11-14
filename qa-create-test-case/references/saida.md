@@ -14,7 +14,7 @@ Com entrada TEXTO sem site conhecido, deixe a chave sem link.
 
 ## Estrutura padrão do cenário
 
-Todo cenário começa com uma checkbox desmarcada antes do título, para o QA marcar quando executar. O ID e o título do cenário ficam em negrito; a prioridade fica fora do negrito. Depois de cada cenário, deixe uma linha em branco antes do próximo. Para cada cenário:
+Todo cenário começa com uma checkbox desmarcada antes do título, para o QA marcar quando executar. O ID e o título do cenário ficam sempre em negrito, em qualquer formato de saída (Jira ou chat); a prioridade fica fora do negrito. Depois de cada cenário, deixe uma linha em branco antes do próximo. Para cada cenário:
 
 ```text
 - [ ] **CT-NNN — <título>** [P0/P1/P2]
@@ -45,8 +45,6 @@ Registre as lacunas como em [lacunas.md](lacunas.md).
 🚫 Não gere cenários quando INSUFICIENTE.
 
 ```text
-⚠️ Geração Automatizada de Casos de Teste via IA.
-
 INSUFICIENTE: Critérios funcionais insuficientes para geração de testes.
 Descrição de lacunas em forma de perguntas para alinhamento com devs.
 
@@ -68,13 +66,11 @@ Quando o destino for a descrição da subtarefa no Jira, o primeiro bloco é o a
 3. **Cenários Gherkin** (quando o usuário pedir)
 4. **Lacunas / perguntas**, precedidas de uma linha horizontal antes do título — AC faltando, regras pouco claras, afirmações não testáveis, necessidades de dados/ambiente. Sempre em forma de pergunta analítica, no formato de lista deste arquivo.
 
-🚫 Não inclua linha de fonte, "Campo ambiente de testes" nem "Campo massa de teste".
+🚫 Não inclua linha de fonte, "Campo ambiente de testes", "Campo massa de teste" nem a frase "Geração Automatizada de Casos de Teste via IA".
 
 Use o exemplo abaixo como base:
 
 ```text
-⚠️ Geração Automatizada de Casos de Teste via IA (data).
-
 Resumo do que se trata o card em até 300 caracteres
 ---
 

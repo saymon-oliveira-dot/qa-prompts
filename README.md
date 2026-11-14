@@ -52,3 +52,7 @@ Quem clonar o projeto e abrir no Cursor passa a ter a skill naquele repositório
 ## Jira
 
 Para ler o card e criar a subtarefa, o Cursor precisa do MCP Atlassian autenticado (Settings → MCP). Sem ele, a skill para e pede para habilitar o MCP. Ela não inventa o conteúdo do ticket.
+
+## Figma
+
+Se o card tiver link do Figma, a `qa-create-test-case` lê o design pelo MCP do Figma (Settings → MCP) e usa só o comportamento funcional: estados, mensagens de erro, campos obrigatórios e fluxo entre telas. A conexão é verificada no início, junto com a do Atlassian. Sem o MCP do Figma, a skill segue só com o card e registra o link como lacuna.
