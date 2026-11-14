@@ -9,6 +9,7 @@ Uma skill não é código da aplicação. É o roteiro que o Cursor segue quando
 | Pasta | O que faz |
 |---|---|
 | `qa-create-test-case` | Gera cenários de teste funcional a partir de um card do Jira (`PROJ-123`) ou de um texto colado (história, PRD ou critérios de aceite). Se a entrada for uma história e o conteúdo for suficiente, grava o resultado na subtarefa `[QA] Testabilidade e cenários`. |
+| `qa-regression-scope` | Lê as histórias em Done dos boards upstream e downstream do Jira, cruza o que foi refinado com o que foi entregue e gera cenários regressivos por squad ou produto, no chat. Não grava nada no Jira. |
 
 ## Instalar na máquina
 
@@ -19,7 +20,10 @@ No PowerShell, na raiz deste repositório:
 ```powershell
 New-Item -ItemType Directory -Force -Path "$env:USERPROFILE\.cursor\skills"
 Copy-Item -Recurse -Force ".\qa-create-test-case" "$env:USERPROFILE\.cursor\skills\qa-create-test-case"
+Copy-Item -Recurse -Force ".\qa-regression-scope" "$env:USERPROFILE\.cursor\skills\qa-regression-scope"
 ```
+
+Copie só as linhas das skills que você quer usar.
 
 O destino fica assim:
 
