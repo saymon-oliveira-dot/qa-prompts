@@ -11,6 +11,8 @@ Uma skill não é código da aplicação. É o roteiro que o Cursor segue quando
 | `qa-create-test-case` | Gera cenários de teste funcional a partir de um card do Jira (`PROJ-123`) ou de um texto colado (história, PRD ou critérios de aceite). Se a entrada for uma história e o conteúdo for suficiente, grava o resultado na subtarefa `[QA] Testabilidade e cenários`. |
 | `qa-regression-scope` | Lê as histórias em Done dos boards upstream e downstream do Jira, cruza o que foi refinado com o que foi entregue e gera cenários regressivos por squad ou produto, no chat. Não grava nada no Jira. |
 
+O fluxo da `qa-create-test-case` está desenhado em [`qa-create-test-case/fluxo.html`](qa-create-test-case/fluxo.html). Abra o arquivo no navegador.
+
 ## Instalar na máquina
 
 A instalação copia a pasta da skill para a pasta de skills do seu usuário. Depois disso ela vale em qualquer projeto aberto no Cursor, nesta máquina.
